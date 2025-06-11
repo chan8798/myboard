@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>친구 찾기</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 20px;
+    }
+    .home-btn {
+      padding: 8px 15px;
+      font-size: 1rem;
+      background-color: #ddadd1;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .home-btn:hover {
+      background-color: #d27fa6;
+    }
+    form {
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      padding: 8px;
+      font-size: 1rem;
+      width: 300px;
+    }
+    button {
+      padding: 8px 15px;
+      font-size: 1rem;
+      background-color: #ddadd1;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #d27fa6;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px 15px;
+      text-align: left;
+    }
+    th {
+      background-color: #fabdf3;
+    }
+    a.blog-link {
+      color: #d27fa6;
+      text-decoration: none;
+    }
+    a.blog-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <a class="home-btn" href="/home/<%= user.userid %>">이전</a>
+  </div>
+
+  <h1>친구 찾기</h1>
+  <form action="/searchfriend" method="get">
+    <input type="text" name="username" placeholder="이름 또는 아이디로 검색" 
+    value="<%= searchKeyword %>" required />
+    <button type="submit">검색</button>
+  </form>
+
+  <% if (users && users.length > 0) { %>
+    <table>
+      <thead>
+        <tr>
+          <th>이름</th>
+          <th>아이디</th>
+          <th>블로그 보기</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach(user => { %>
+          <tr>
+            <td><%= user.name %></td>
+            <td><%= user.userid %></td>
+            <td><a class="blog-link" href="/friendblog/<%= user.userid %>">블로그 보기</a></td>
+            <td>
+               <% if (user.isFriend) { %>
+                서로 친구입니다
+                <% } else { %>
+                  <form action="/addfriend" method="post" style="display:inline;">
+                    <input type="hidden" name="friendId" value="<%= user.userid %>">
+                     <input type="hidden" name="searchKeyword" value="<%= searchKeyword %>"> 
+                    <button type="submit">친구 추가</button>
+                  </form>
+                <% } %>
+              
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } else if (users) { %>
+    <p>검색 결과가 없습니다.</p>
+  <% } %>
+</body>
+</html>
