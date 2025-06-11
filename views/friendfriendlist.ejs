@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= friend.userid %>(<%= friend.name %>) 님의 친구 목록</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 20px;
+    }
+    .home-btn {
+      padding: 8px 15px;
+      font-size: 1rem;
+      background-color: #ddadd1;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .home-btn:hover {
+      background-color: #d27fa6;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px 15px;
+      text-align: left;
+    }
+    th {
+      background-color: #fabdf3;
+    }
+    a.blog-link {
+      color: #d27fa6;
+      text-decoration: none;
+    }
+    a.blog-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <a class="home-btn" href="/user/<%= user.userid %>/friends">사용자 친구</a>
+  </div>
+  <a class="home-btn"  href="/home/<%=user.userid%>">홈</a>
+  
+  <h2> <%= friend.userid %>(<%= friend.name %>) 님의 친구 목록</h2>
+
+  <% if (friends.length === 0) { %>
+    <p>친구가 없습니다.</p>
+  <% }  else { %>
+    <table>
+      <thead>
+        <tr>
+          <th>이름</th>
+          <th>아이디</th>
+          <th>블로그 보기</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% friends.forEach(friend => { %>
+          <% if (friend.userid ==user.userid ) { %>
+            <tr>
+              <td><%= user.name %></td>
+              <td><%= user.userid %></td>
+              <td><a href="/blog/<%= user.userid %>" class="blog-link">블로그 보기</a></td>
+            </tr>
+          <% }else { %>
+            <tr>
+            <td><%= friend.name %></td>
+            <td><%= friend.userid %></td>
+            <td><a href="/friendblog/<%= friend.userid %>" class="blog-link">블로그 보기</a></td>
+          </tr>
+          <% }%>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } %>
+</body>
+</html>
+

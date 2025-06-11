@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <title><%= user.userid %> 게시물 작성</title>
+    <style>
+      form {
+        background: #fff;
+        padding: 25px 30px;
+        border-radius: 10px;
+        box-shadow: 0 6px 12px rgb(0 0 0 / 0.1);
+        max-width: 600px;
+        margin: 30px auto 0 auto;
+      }
+
+      label {
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+        display: block;
+        color: #333;
+      }
+
+      input.form-control,
+      textarea.form-control {
+        border-radius: 6px;
+        border: 1.8px solid #ddd;
+        padding: 12px 15px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      input.form-control:focus,
+      textarea.form-control:focus {
+        border-color: #fabdf3;
+        outline: none;
+        box-shadow: 0 0 6px #fabdf3;
+      }
+
+      button.btn-warning {
+        background-color: #fabdf3;
+        border-color: #fabdf3;
+        font-weight: 600;
+        padding: 10px 25px;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button.btn-warning:hover {
+        background-color: #fabdf3;
+        border-color: #fabdf3;
+        color: white;
+      }
+
+      .form-submit {
+        margin-top: 30px;
+        text-align: right;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #ddadd1;
+        padding: 10px 20px;
+        color: white;
+      }
+
+      .navbar .logo {
+        font-size: 1.5em;
+        font-weight: bold;
+      }
+
+      .navbar .nav-buttons button,
+      .navbar .nav-buttons a {
+        background-color: #ddadd1;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        margin-left: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .navbar .nav-buttons button:hover,
+      .navbar .nav-buttons a:hover {
+        background-color: #d27fa6;
+      }
+
+      #image-preview {
+        display: none;
+        max-width: 100%;
+        margin-top: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="logo"><%= user.userid %>의 게시물 작성</div>
+      <div class="nav-buttons">
+        <a href="/blog/<%= user.userid %>">블로그</a>
+        <a href="/home/<%= user.userid %>">홈</a>
+      </div>
+    </nav>
+
+    <form action="/savemongo" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label>제목</label>
+        <input type="text" name="title" class="form-control">
+      </div>
+
+      <p></p>
+
+      <div class="form-group">
+        <label>내용</label>
+        <textarea name="content" rows="10" class="form-control"></textarea>
+      </div>
+
+      <p></p>
+
+      <div class="form-group" style="margin-top:20px;">
+        <label for="image">사진 첨부</label>
+        <input id="image" type="file" name="image" accept="image/*" class="form-control">
+      </div>
+
+      <div id="preview-container" style="text-align:center; margin-top:20px;">
+        <img id="image-preview" src="" alt="미리보기 이미지">
+      </div>
+
+      <input type="hidden" name="userid" value="<%= user.userid %>">
+      <div class="form-submit">
+        <button type="submit" class="btn btn-warning">저장</button>
+      </div>
+    </form>
+
+    <script>
+      const imageInput = document.getElementById('image');
+      const preview = document.getElementById('image-preview');
+
+      imageInput.addEventListener('change', function () {
+        const file = imageInput.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+        } else {
+          preview.src = '';
+          preview.style.display = 'none';
+        }
+      });
+    </script>
+  </body>
+</html>

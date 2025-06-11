@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title><%= user.userid%>님의 개인 홈페이지</title>
+  <style>
+   body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #ddadd1;
+      padding: 10px 20px;
+      color: white;
+      flex-wrap: wrap;
+    }
+    .navbar .logo {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: white;
+    }
+    .navbar .left-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .navbar .right-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .navbar input[type="text"],
+    .navbar button,
+    .navbar a {
+      height: 40px;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: none;
+      padding: 0 15px;
+      box-sizing: border-box;
+    }
+    .navbar input[type="text"] {
+      width: 200px;
+      border: 1px solid #ccc;
+    }
+    .navbar button {
+      background-color: white;
+      color: #ddadd1;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .navbar button:hover {
+      background-color: #f2e0ef;
+    }
+    .navbar a {
+      text-decoration: none;
+      background-color: #ddadd1;
+      color: white;
+      font-weight: bold;
+      line-height: 40px;
+      padding: 0 15px;
+    }
+    .navbar a:hover {
+      background-color: #d27fa6;
+    }
+    h2 {
+      text-align: center;
+      margin-top: 30px;
+    }
+    .post {
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+    .post h3 {
+      margin-top: 0;
+    }
+    .post img {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="left-section">
+      <span class="logo">My Home / <%=user.userid%> look and share</span>
+      <form action="/searchfriend" method="get" style="display: flex; gap: 10px;">
+        <input type="text" name="username" placeholder="사용자 이름 검색" required>
+        <button type="submit">검색</button>
+      </form>
+    </div>
+    <div class="right-section">
+      <a href="/blog/<%= user.userid %>">블로그</a>
+      <a href="/out/<%= user.userid %>">탈퇴</a>
+      <a href="/logout">로그아웃</a>
+    </div>
+  </nav>
+  <h2></h2>
+  <!-- 사용자 게시물 출력 -->
+  <h3>나의 최신 게시물</h3>
+  <% if (userRecentPosts.length === 0) { %>
+    <p>작성한 게시물이 없습니다.</p>
+  <% } else { %>
+    <% userRecentPosts.forEach(post => { %>
+      <div class="post">
+        <h4><%= post.title %></h4>
+        <p><%= post.content %></p>
+        <small>작성일: <%= new Date(post.createdAt).toLocaleString() %></small>
+        <% if (post.imagePath) { %>
+          <div>
+            <img src="<%= post.imagePath %>" alt="게시물 이미지" style="max-width:300px; border-radius:10px;">
+          </div>
+        <% } %>
+      </div>
+    <% }) %>
+  <% } %>
+
+  <!-- 친구 게시물 출력 -->
+  <h3>친구들의 최신 게시물</h3>
+  <% if (friendRecentPosts.length === 0) { %>
+    <p>친구가 없거나 친구들이 작성한 게시물이 없습니다.</p>
+  <% } else { %>
+    <% friendRecentPosts.forEach(post => { %>
+      <div class="post">
+        <div>
+          <strong>친구 이름: <%= friendInfoMap[post.userid].name %></strong><br>
+          <strong>친구 아이디: <%= friendInfoMap[post.userid].userid %></strong>
+        </div>
+        <h4><%= post.title %></h4>
+        <p><%= post.content %></p>
+        <small>작성일: <%= new Date(post.createdAt).toLocaleString() %></small>
+        <% if (post.imagePath) { %>
+          <div>
+            <img src="<%= post.imagePath %>" alt="게시물 이미지" style="max-width:300px; border-radius:10px;">
+          </div>
+        <% } %>
+      </div>
+    <% }) %>
+  <% } %>
+</body>
+</html>

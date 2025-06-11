@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title><%= user.userid%>님의 블로그</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #ddadd1;
+      padding: 10px 20px;
+      color: white;
+    }
+    .navbar .logo {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+    .navbar .nav-buttons button,
+    .navbar .nav-buttons a {
+      background-color: #ddadd1;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      margin-left: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .navbar .nav-buttons button:hover,
+    .navbar .nav-buttons a:hover {
+      background-color: #d27fa6;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo"><%=user.userid%>의 블로그</div>
+    <div class="nav-buttons">
+      <a href="/write/<%=user.userid%>">작성</a>
+      <a href="/home/<%=user.userid%>">홈</a>
+      <a href="/user/<%= user.userid %>/friends">친구</a>
+    </div>
+  </nav>
+  <h2><%=user.userid%>의 게시물</h2>
+  <% if (posts.length === 0) { %>
+  <p>작성한 게시물이 없습니다.</p>
+<% } else { %>
+  <% posts.forEach(post => { %>
+    <div style="border:1px solid #ccc; padding:15px; margin-bottom:20px; border-radius:8px;">
+      <h3><%= post.title %></h3>
+      <p><%= post.content %></p>
+      <small>작성일: <%= new Date(post.createdAt).toLocaleString() %></small>
+
+      <% if (post.imagePath) { %>
+        <div style="margin-top:10px;">
+          <img src="<%= post.imagePath %>" alt="게시물 이미지" style="max-width:300px; border-radius:10px;">
+        </div>
+      <% } %>
+       <div style="margin-top:15px;">
+        <!-- 수정 버튼 -->
+        <a href="/editpost/<%= post._id %>" class="btn btn-sm btn-secondary" style="margin-right:10px;">수정하기</a>
+        <!-- 삭제 버튼 -->
+        <form action="/deletepost" method="POST" style="display:inline;" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+          <input type="hidden" name="postId" value="<%= post._id %>">
+          <input type="hidden" name="userid" value="<%= user.userid %>">
+          <button type="submit" class="btn btn-sm btn-danger">삭제하기</button>
+        </form>
+      </div>
+    </div>
+  <% }); %>
+<% } %>
+
+</body>
+</html>
